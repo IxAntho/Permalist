@@ -39,11 +39,12 @@ app.get("/", async (req, res) => {
 
 app.post("/add", async (req, res) => {
   const item = req.body.newItem;
+
   try {
     if (!item) {
       return res.redirect("/?error=Please provide a task");
     }
-    await db.query("INSERT INTO items (title) VALUES $1", item);
+    await db.query("INSERT INTO items (title) VALUES ($1)", [item]);
   } catch (err) {
     console.error("Error adding task:", err);
     res.redirect("/?error=An error occurred while adding a new task");
