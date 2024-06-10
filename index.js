@@ -68,7 +68,16 @@ app.post("/edit", async (req, res) => {
   }
 });
 
-app.post("/delete", (req, res) => {});
+app.post("/delete", async (req, res) => {
+  const taskDoneId = req.body.deleteItemId;
+  try {
+    await db.query("DELETE FROM items WHERE items.id = $1", [taskDoneId]);
+    res.redirect("/");
+  } catch (err) {
+    console.log("Error trying to delete a task: ", err);
+    res.redirect("/?error=An error occurred while deliting a task");
+  }
+});
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
