@@ -53,7 +53,20 @@ app.post("/add", async (req, res) => {
   res.redirect("/");
 });
 
-app.post("/edit", (req, res) => {});
+app.post("/edit", async (req, res) => {
+  const newItem = req.body.updatedItemTitle;
+  const itemId = req.body.updatedItemId;
+  try {
+    await db.query("UPDATE items SET title = $1 WHERE items.id = $2", [
+      newItem,
+      itemId,
+    ]);
+    res.redirect("/");
+  } catch (err) {
+    console.error("Error editing task:", err);
+    res.redirect("/?error=An error occurred while editing a task");
+  }
+});
 
 app.post("/delete", (req, res) => {});
 
